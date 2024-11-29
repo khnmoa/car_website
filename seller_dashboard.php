@@ -49,10 +49,6 @@ $result = $stmt->get_result();
         }
         ?>
     </div>
-<a href="index.php">
-    <button>Go to Home</button>
-</a>
 
-    <a href="logout.php">Logout</a>
 </body>
 </html>

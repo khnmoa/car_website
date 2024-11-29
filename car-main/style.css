@@ -1,0 +1,64 @@
+
+/* All pages */
+
+body {
+  background-color: #f8f9fa;
+}
+
+.navbar{
+    background-color: white;
+    position: fixed;
+    width: 100%;
+     z-index: 99999; 
+    top: 0%; 
+    
+}
+
+h1{
+   margin-top: 60px;
+}
+
+.card {
+  font-family: 'Arial', sans-serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+/* login page */
+
+.login {
+    border-radius: 10px;
+    background-color: rgb(185, 220, 242);
+}
+
+    /* sign_up page */
+    
+  .sign-home {
+    margin-top: 60px;
+    background:linear-gradient(rgb(164, 215, 239),rgb(137, 191, 176));
+    font-family: Arial, sans-serif;
+    border-radius: 8px;
+  }
+  
+     /* about page */
+  
+   .about:hover{
+    color: olivedrab;
+
+   }
