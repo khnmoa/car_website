@@ -1,16 +1,18 @@
-
-
-    
-
 <?php
 session_start();
 include 'db.php';
 
+// التحقق من أن المستخدم هو بائع
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'seller') {
+    header('Location: login.php');
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $car_name = $_POST['car_name'];
-    $car_description = $_POST['car_description'];
+    $make = $_POST['make'];
+    $model = $_POST['model'];
+    $year = $_POST['year'];
     $price = $_POST['price'];
-    $category_id = $_POST['category_id'];
     $seller_id = $_SESSION['user']['id'];
 
     // تحقق من رفع الملف بشكل صحيح
@@ -25,13 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // نقل الملف إلى المجلد
             if (move_uploaded_file($_FILES['car_image']['tmp_name'], $upload_path)) {
                 // إدخال بيانات السيارة في قاعدة البيانات
-                $query = "INSERT INTO cars (user_id, car_name, car_description, price, car_image, category_id, seller_id) 
-                          VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $query = "INSERT INTO cars (make, model, year, price, image_url, seller_id) 
+                          VALUES (?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($query);
-                $stmt->bind_param('issdssi', $_SESSION['user']['id'], $car_name, $car_description, $price, $upload_path, $category_id, $seller_id);
+                $stmt->bind_param('ssdisi', $make, $model, $year, $price, $upload_path, $seller_id);
 
                 if ($stmt->execute()) {
-                    echo "Car added successfully!";
+                    // إعادة توجيه المستخدم إلى صفحة الـ dashboard بعد نجاح العملية
+                    header('Location: seller_dashboard.php');
+                    exit;  // تأكد من أن الكود لا يستمر بعد التوجيه
                 } else {
                     echo "Error adding car.";
                 }
@@ -48,19 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <form action="add_car.php" method="post" enctype="multipart/form-data">
-    <input type="text" name="car_name" required placeholder="Car Name"><br>
-    <textarea name="car_description" required placeholder="Car Description"></textarea><br>
+    <input type="text" name="make" required placeholder="Car Make (Company)"><br>
+    <input type="text" name="model" required placeholder="Car Model"><br>
+    <input type="number" name="year" required placeholder="Car Year"><br>
     <input type="number" name="price" required placeholder="Price"><br>
-    <select name="category_id" required>
-        <?php
-        $category_query = "SELECT id, category_name FROM categories";
-        $category_result = $conn->query($category_query);
-        while ($category = $category_result->fetch_assoc()) {
-            echo "<option value='" . $category['id'] . "'>" . $category['category_name'] . "</option>";
-        }
-        ?>
-    </select>
-    <input type="file" name="car_image" required>
+    <!-- حقل رفع الصورة -->
+    <input type="file" name="car_image" required><br>
+
     <button type="submit">Add Car</button>
 </form>
-
